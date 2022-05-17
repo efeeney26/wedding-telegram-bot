@@ -1,17 +1,17 @@
 {
-  // This is an alias to @tsconfig/node16: https://github.com/tsconfig/bases
-  "extends": "ts-node/node16/tsconfig.json",
-  // Most ts-node options can be specified here using their programmatic names.
   "ts-node": {
     "transpileOnly": true,
     "files": true,
   },
   "compilerOptions": {
-    "target": "es6",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "module": "commonjs",                                /* Specify what module code is generated. */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
-    "outDir": "./build",
-    /* Type Checking */
-    "strict": true,                                      /* Enable all strict type-checking options. */
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es2021",
+    "moduleResolution": "node",
+    "strict": true,
+    "lib": ["es2021"],
+    "skipLibCheck": true,
+    "rootDir": "src",
+    "outDir": "dist"
   }
 }
