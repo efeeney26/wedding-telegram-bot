@@ -35,7 +35,7 @@ bot.action('fact', async (ctx, next) => {
 
 bot.action('act', async (ctx, next) => {
   await ctx.reply(
-    `Докажи, насколько ты крут. 😎😎 ${ACTS[Math.floor(Math.random() * FACTS.length)]} 😎😎`,
+    `Докажи, насколько ты крут. 😎😎 ${ACTS[Math.floor(Math.random() * ACTS.length)]} 😎😎`,
     inlineKeyboard
   );
   next();
