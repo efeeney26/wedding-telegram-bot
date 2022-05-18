@@ -7,6 +7,8 @@ import { FACTS, ACTS } from './constants';
 config();
 
 const token: string = process.env.BOT_TOKEN as string;
+const WISHES_CHAT_ID: string = process.env.WISHES_CHAT_ID as string
+const ACTS_CHAT_ID: string = process.env.ACTS_CHAT_ID as string
 
 const bot: Telegraf<Context<Update>> = new Telegraf(token);
 
@@ -27,30 +29,36 @@ bot.start((ctx) => {
 
 bot.action('fact', async (ctx, next) => {
   await ctx.reply(
-    `Ты удивишься, но... 🌚🌚 ${FACTS[Math.floor(Math.random() * FACTS.length)]} 🌚🌚`,
+    `🌚🌚 Ты удивишься, но... ${FACTS[Math.floor(Math.random() * FACTS.length)]} 🌚🌚`,
     inlineKeyboard,
   );
   next();
 })
 
-bot.action('act', async (ctx, next) => {
-  await ctx.reply(
-    `Докажи, насколько ты крут. 😎😎 ${ACTS[Math.floor(Math.random() * ACTS.length)]} 😎😎`,
-    inlineKeyboard
-  );
-  next();
+let conditionToStopEaringMessagesAct: boolean;
+
+bot.action('act', async (ctx) => {
+  conditionToStopEaringMessagesAct = false;
+  await ctx.reply(`😎😎 Докажи, насколько ты крут. ${ACTS[Math.floor(Math.random() * ACTS.length)]} 😎😎`);
+  bot.on('message', async (ctx) => {
+    if (!conditionToStopEaringMessagesAct) {
+      await ctx.telegram.sendCopy(ACTS_CHAT_ID, ctx.message);
+      await ctx.reply('Задание отправлено!', inlineKeyboard);
+      conditionToStopEaringMessagesAct = true;
+    }
+  });
 })
 
-let conditionToStopEaringMessages: boolean;
+let conditionToStopEaringMessagesWish: boolean;
 
 bot.action('wish', async (ctx) => {
-  conditionToStopEaringMessages = false;
+  conditionToStopEaringMessagesWish = false;
   await ctx.reply('Напиши пожелание молодоженам');
   bot.on('text',  async (ctx) => {
-    if (!conditionToStopEaringMessages) {
-        await ctx.telegram.sendMessage('-720490123', ctx.message.text)
+    if (!conditionToStopEaringMessagesWish) {
+        await ctx.telegram.sendMessage(WISHES_CHAT_ID, `"${ctx.message.text}" отправлено от ${ctx.from.username || 'гостя'}`);
         await ctx.reply('Пожелание отправлено молодоженам! Спасибо!', inlineKeyboard);
-        conditionToStopEaringMessages = true;
+        conditionToStopEaringMessagesWish = true;
       }
   });
 })
