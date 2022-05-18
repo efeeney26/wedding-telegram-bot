@@ -46,12 +46,10 @@ let conditionToStopEaringMessages: boolean;
 bot.action('wish', async (ctx) => {
   conditionToStopEaringMessages = false;
   await ctx.reply('Напиши пожелание молодоженам');
-  bot.on('text', async (ctx) => {
-    if (ctx.message.text && !conditionToStopEaringMessages) {
-        const message = await ctx.copyMessage('-720490123', ctx.message);
-        if (message) {
-          await ctx.reply('Сообщение отправлено молодоженам! Спасибо!', inlineKeyboard);
-        }
+  bot.on('text',  async (ctx) => {
+    if (!conditionToStopEaringMessages) {
+        await ctx.telegram.sendMessage('-720490123', ctx.message.text)
+        await ctx.reply('Пожелание отправлено молодоженам! Спасибо!', inlineKeyboard);
         conditionToStopEaringMessages = true;
       }
   });
