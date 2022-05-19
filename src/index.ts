@@ -54,7 +54,7 @@ let conditionToStopEaringMessagesWish: boolean;
 bot.action('wish', async (ctx) => {
   conditionToStopEaringMessagesWish = false;
   await ctx.reply('Напиши пожелание молодоженам');
-  bot.on('text',  async (ctx) => {
+  bot.on('message',  async (ctx) => {
     if (!conditionToStopEaringMessagesWish) {
         await ctx.telegram.sendCopy(WISHES_CHAT_ID, ctx.message);
         await ctx.reply('Пожелание отправлено молодоженам! Спасибо!', inlineKeyboard);
