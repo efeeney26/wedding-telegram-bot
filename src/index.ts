@@ -40,9 +40,15 @@ let conditionToStopEaringMessagesAct: boolean;
 bot.action('act', async (ctx) => {
   conditionToStopEaringMessagesAct = false;
   await ctx.reply(`😎😎 Докажи, насколько ты крут. ${ACTS[Math.floor(Math.random() * ACTS.length)]} 😎😎`);
-  bot.on('message', async (ctx) => {
+  bot.on('photo', async (ctx) => {
     if (!conditionToStopEaringMessagesAct) {
-      await ctx.telegram.sendCopy(ACTS_CHAT_ID, ctx.message);
+      const file = ctx.message.photo.length - 1;
+      ctx.telegram.sendPhoto(
+        ACTS_CHAT_ID,
+        ctx.message.photo[file].file_id,
+        {
+          'caption': ctx.message.caption
+        });
       await ctx.reply('Задание отправлено!', inlineKeyboard);
       conditionToStopEaringMessagesAct = true;
     }
@@ -54,12 +60,15 @@ let conditionToStopEaringMessagesWish: boolean;
 bot.action('wish', async (ctx) => {
   conditionToStopEaringMessagesWish = false;
   await ctx.reply('Напиши пожелание молодоженам');
-  bot.on('message',  async (ctx) => {
+  bot.on('text', async (ctx) => {
     if (!conditionToStopEaringMessagesWish) {
-        await ctx.telegram.sendCopy(WISHES_CHAT_ID, ctx.message);
-        await ctx.reply('Пожелание отправлено молодоженам! Спасибо!', inlineKeyboard);
-        conditionToStopEaringMessagesWish = true;
-      }
+      await ctx.telegram.sendMessage(
+        WISHES_CHAT_ID,
+        `"${ctx.message.text}" отправлено от ${ctx.from.username || 'гостя'}`
+      );
+      await ctx.reply('Пожелание отправлено молодоженам! Спасибо!', inlineKeyboard);
+      conditionToStopEaringMessagesWish = true;
+    }
   });
 })
 
